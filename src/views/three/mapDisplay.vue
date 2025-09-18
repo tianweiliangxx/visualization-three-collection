@@ -126,7 +126,7 @@ const dynamicBg = useDynamicBg1()
 function loadMapData(scene: THREE.Scene) {
   const loader = new THREE.FileLoader()
 
-  loader.load('./public/json/ChinaMap.json', (data) => {
+  loader.load('/json/ChinaMap.json', (data) => {
     const jsonData = JSON.parse(data as string)
     createMap(jsonData, scene)
 
