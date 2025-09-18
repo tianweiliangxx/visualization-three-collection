@@ -50,6 +50,9 @@ const mapColor = '#008170' // 地图表面颜色
 const mapSideColor = '#1AACAC' // 地图侧面颜色
 const mapHoverColor = '#005B41' // hover后的地图表面颜色
 
+// 墨卡托投影转换
+const projection = geoMercator().center([104.0, 37.5]).scale(80).translate([0, 0])
+
 const containerRef = ref<HTMLDivElement | null>(null)
 const tooltipRef = ref<HTMLDivElement | null>(null)
 
@@ -124,9 +127,10 @@ function loadMapData(scene: THREE.Scene) {
   const loader = new THREE.FileLoader()
 
   loader.load('./public/json/ChinaMap.json', (data) => {
-    console.log(data)
     const jsonData = JSON.parse(data as string)
     createMap(jsonData, scene)
+
+    addPointer(scene)
     // dynamicBg.
     dynamicBg.scale.set(0.32, 0.32, 1)
     dynamicBg.position.set(0, 0, -8)
@@ -139,8 +143,6 @@ function loadMapData(scene: THREE.Scene) {
 function createMap(data: Record<string, any>, scene: THREE.Scene) {
   // 初始化一个地图对象
   map = new THREE.Object3D()
-  // 墨卡托投影转换
-  const projection = geoMercator().center([104.0, 37.5]).scale(80).translate([0, 0])
 
   data.features.forEach(
     (elem: {
@@ -208,6 +210,22 @@ function createMap(data: Record<string, any>, scene: THREE.Scene) {
   map.position.set(mapInitPosition.x, mapInitPosition.y, mapInitPosition.z)
 
   scene.add(map)
+}
+
+// 添加散点
+function addPointer(scene: THREE.Scene) {
+  const pointTexture = new THREE.TextureLoader().load('/images/three/point.png')
+
+  let [x, y] = projection([117.141401, 39.230342])
+  console.log(x, y)
+  const sprite = new THREE.Sprite(
+    new THREE.SpriteMaterial({
+      map: pointTexture,
+    }),
+  )
+  sprite.rotation.set(0, 1, 0)
+  sprite.position.set(x, y, mapDepth + 0.5)
+  scene.add(sprite)
 }
 
 function initializeHandle(

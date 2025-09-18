@@ -53,7 +53,6 @@ export const useInitialize = (
 
       // 启动渲染
       render()
-      console.log(123123)
 
       initializeHandle && initializeHandle(scene, camera, renderer)
     }
