@@ -236,7 +236,7 @@ const init = () => {
   }
 }
 
-watch(() => globalContext.value.menuWidth, init)
+// watch(() => globalContext.value.menuWidth, init)
 
 watch(() => title, init)
 
@@ -265,7 +265,7 @@ const onMouseLeave = () => {
       ref="containerRef"
     >
       <canvas ref="canvasRef">
-        {{ t('common.browserTooLow') }}
+        <!--        {{ t('common.browserTooLow') }}-->
       </canvas>
       <div
         class="content"

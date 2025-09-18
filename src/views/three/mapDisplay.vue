@@ -1,8 +1,8 @@
 <template>
   <div class="mapBox" ref="containerRef" @mousemove="onMouseMove">
-    <!--    <div class="switch" @click="showOrHideMainPage">-->
-    <!--      <AppstoreOutlined />-->
-    <!--    </div>-->
+    <div class="switch" @click="showOrHideMainPage">
+      <el-icon><SwitchButton /></el-icon>
+    </div>
     <div class="topBox" ref="topBoxRef">
       <img src="/images/three/topBg.png" alt="" class="topBg" />
       <img src="/images/three/shine.png" alt="" class="shine" />
@@ -41,6 +41,7 @@ import { useInitialize } from '@/hooks/threejs/useInitialize.ts'
 import { useDynamicBg1 } from '@/hooks/threejs/useDynamicBg1.ts'
 
 import Border1 from '@/components/LargeScreenBorder/Border1.vue'
+import { SwitchButton } from '@element-plus/icons-vue'
 
 const cameraInitPosition = { x: 0, y: -20, z: 80 } // 相机初始位置
 const mapInitPosition = { x: 0, y: 6, z: 0 } // 地图初始位置
@@ -60,6 +61,8 @@ let lastPick: any = null
 
 const { scene, resize } = useInitialize(containerRef, initializeHandle, null, renderHandle)
 onMounted(() => {})
+
+const showOrHideMainPage = () => {}
 
 const showTip = () => {
   if (tooltipRef.value) {
@@ -238,6 +241,134 @@ function initializeHandle(
   overflow: hidden;
   position: relative;
   background-color: #000808;
+  $topBoxHeight: 80px;
+  $leftBoxWidth: 30%;
+  $rightBoxWidth: 30%;
+
+  .switch {
+    position: absolute;
+    top: 40px;
+    right: 20px;
+    z-index: 2;
+    font-size: 30px;
+    :deep(svg) {
+      path {
+        fill: #00c6c6;
+      }
+    }
+    &:hover {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+  }
+
+  .topBox {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: $topBoxHeight;
+    z-index: 1;
+    //transform: translate(0px, -$topBoxHeight);
+
+    img {
+      width: 100%;
+      height: 61px;
+    }
+    $marginTop: 20px;
+    $lineWidth: 120px;
+    $lineHeight: 4px;
+    .topBg {
+      position: absolute;
+      top: $marginTop;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 61px;
+    }
+    .shine {
+      position: absolute;
+      top: $marginTop + 31px;
+      left: 0;
+      right: 0;
+      width: 808px;
+      height: 55px;
+      margin: 0 auto;
+    }
+    .leftLine {
+      position: absolute;
+      top: calc($marginTop - calc($lineHeight / 2));
+      left: 4%;
+      width: $lineWidth;
+      height: $lineHeight;
+      border-radius: calc($lineHeight / 2);
+      background-image: linear-gradient(to left, #b5eff6, #008f8f, #003d3d);
+    }
+    .rightLine {
+      position: absolute;
+      top: calc($marginTop - calc($lineHeight / 2) + 1px);
+      right: 4%;
+      width: $lineWidth;
+      height: $lineHeight;
+      border-radius: calc($lineHeight / 2);
+      background-image: linear-gradient(to right, #b5eff6, #008f8f, #003d3d);
+    }
+    .title {
+      position: absolute;
+      top: 16px;
+      left: 0;
+      right: 0;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      span {
+        text-align: center;
+        font-size: 32px;
+        font-weight: 600;
+        font-family: 'SourceHanSansCN-Bold' !important;
+        background-image: linear-gradient(to right, #003d3d, #008f8f, #00cfcf, #008f8f, #003d3d);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+    }
+  }
+  .leftBox {
+    position: absolute;
+    left: 0;
+    top: $topBoxHeight;
+    width: $leftBoxWidth;
+    height: calc(100% - $topBoxHeight);
+    z-index: 1;
+    //transform: translate(-$leftBoxWidth, 0px);
+
+    .item {
+      width: 100%;
+      height: 40%;
+      padding: 20px;
+      &:last-child {
+        height: 60%;
+      }
+    }
+  }
+  .rightBox {
+    position: absolute;
+    right: 0;
+    top: $topBoxHeight;
+    width: $rightBoxWidth;
+    height: calc(100% - $topBoxHeight);
+    z-index: 1;
+    //transform: translate($leftBoxWidth, 0px);
+
+    .item {
+      width: 100%;
+      height: 40%;
+      padding: 14px;
+      &:last-child {
+        height: 60%;
+      }
+    }
+  }
 
   .tooltip {
     position: absolute;
