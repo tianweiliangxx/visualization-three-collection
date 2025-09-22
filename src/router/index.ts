@@ -22,6 +22,11 @@ const router = createRouter({
       name: 'mapDisplay',
       component: () => import('../views/three/mapDisplay.vue'),
     },
+    {
+      path: '/drillDownMap',
+      name: 'drillDownMap',
+      component: () => import('../views/echarts/drill-down-map.vue'),
+    },
   ],
 })
 

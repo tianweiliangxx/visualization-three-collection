@@ -1,6 +1,7 @@
 
 ## 在线体验
-#### 体验地址：[点击跳转](http://39.104.80.253:9527/mapDisplay)
+#### three体验地址：[点击跳转](http://39.104.80.253:9527/mapDisplay)
+#### echarts体验地址：[点击跳转](http://39.104.80.253:9527/drillDownMap)
 
 ## Project Setup
 
