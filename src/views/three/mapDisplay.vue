@@ -233,9 +233,7 @@ function initializeHandle(
   camera: THREE.PerspectiveCamera,
   renderer: THREE.WebGLRenderer,
 ) {
-  console.log(containerRef.value)
   if (containerRef.value) {
-    console.log(123123)
     scene.background = new THREE.TextureLoader().load(
       '/images/three/pageBg.png',
       (t: THREE.Texture) => {
@@ -246,6 +244,14 @@ function initializeHandle(
     camera.position.set(cameraInitPosition.x, cameraInitPosition.y, cameraInitPosition.z)
 
     controls = new OrbitControls(camera, renderer.domElement)
+
+    // 1. 限制绕 X 轴旋转（上下视角）
+    controls.minPolarAngle = Math.PI / 4 // 最小角度（45°）
+    controls.maxPolarAngle = Math.PI / 1.5 // 最大角度（90°）
+
+    // 2. 限制绕 Y 轴旋转（左右视角）
+    controls.minAzimuthAngle = -Math.PI / 4 // 最小角度（-45°）
+    controls.maxAzimuthAngle = Math.PI / 4 // 最大角度（45°）
 
     loadMapData(scene)
   }
