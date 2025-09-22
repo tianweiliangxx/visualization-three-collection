@@ -166,9 +166,7 @@ function setOption(myEchartsI: ECharts, name: string, data: any, adcode: number)
 async function getData(name: string, adcode: number) {
   const response = await fetch(`/json/geoJson/${adcode}_full.json`)
 
-  // TODO: 判断是否成功
-
-  return await response.json()
+  if (response.ok) return await response.json()
 }
 
 // 获取地图数据
