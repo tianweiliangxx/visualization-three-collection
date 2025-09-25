@@ -172,12 +172,18 @@ async function getData(name: string, adcode: number) {
 // 获取地图数据
 </script>
 <style lang="scss" scoped>
-.container {
-  width: 100vw;
-  height: 100vh;
-  background: url('/images/bg.png') no-repeat;
-  background-size: 100% 100%;
+.drillDownMap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  .container {
+    width: 100%;
+    height: 100%;
+    background: url('/images/bg.png') no-repeat;
+    background-size: 100% 100%;
+  }
 }
+
 .btn {
   position: absolute;
   top: 20px;

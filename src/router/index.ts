@@ -6,26 +6,25 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue'),
-    },
-    {
-      path: '/mapDisplay',
-      name: 'mapDisplay',
-      component: () => import('../views/three/mapDisplay.vue'),
-    },
-    {
-      path: '/drillDownMap',
-      name: 'drillDownMap',
-      component: () => import('../views/echarts/drill-down-map.vue'),
+      component: () => import('@/layouts/index.vue'),
+      redirect: '/home',
+      children: [
+        {
+          path: 'home',
+          name: 'home',
+          component: () => import('@/views/HomeView.vue'),
+        },
+        {
+          path: 'drillDownMap',
+          name: 'drillDownMap',
+          component: () => import('@/views/echarts/drill-down-map.vue'),
+        },
+        {
+          path: 'mapDisplay',
+          name: 'mapDisplay',
+          component: () => import('@/views/three/mapDisplay.vue'),
+        },
+      ],
     },
   ],
 })
