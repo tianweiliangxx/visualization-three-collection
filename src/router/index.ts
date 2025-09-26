@@ -24,6 +24,11 @@ const router = createRouter({
           name: 'mapDisplay',
           component: () => import('@/views/three/mapDisplay.vue'),
         },
+        {
+          path: 'smartCity',
+          name: 'smartCity',
+          component: () => import('@/views/cesium/smartCity.vue'),
+        },
       ],
     },
   ],

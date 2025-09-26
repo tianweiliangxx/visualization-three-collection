@@ -16,18 +16,22 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@cesium-china/cesium-map": "^1.0.0",
     "@element-plus/icons-vue": "^2.3.2",
+    "cesium": "^1.133.1",
     "d3-geo": "^3.1.1",
     "echarts": "^6.0.0",
     "element-plus": "^2.11.2",
     "gsap": "^3.13.0",
     "pinia": "^3.0.3",
     "three": "^0.180.0",
+    "vite-plugin-cesium": "^1.2.23",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
+    "@types/cesium-china__cesium-map": "^1.0.0",
     "@types/d3-geo": "^3.1.0",
     "@types/node": "^22.16.5",
     "@types/three": "^0.180.0",

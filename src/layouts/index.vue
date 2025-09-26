@@ -6,7 +6,7 @@
           <el-menu :default-openeds="['1', '3']" @select="handleSelect">
             <el-sub-menu index="1">
               <template #title>
-                <el-icon><message /></el-icon>echarts
+                <el-icon><icon-menu /></el-icon>echarts
               </template>
               <el-menu-item @click="handleClick('/drillDownMap')" index="1-1"
                 >地图下钻效果</el-menu-item
@@ -20,11 +20,19 @@
                 >地图展示</el-menu-item
               >
             </el-sub-menu>
+            <el-sub-menu index="3">
+              <template #title>
+                <el-icon><icon-menu /></el-icon>Cesium
+              </template>
+              <el-menu-item @click="handleClick('/smartCity')" index="3-1" route="/mapDisplay"
+                >智慧城市</el-menu-item
+              >
+            </el-sub-menu>
           </el-menu>
         </el-scrollbar>
       </el-aside>
       <el-container>
-        <el-header>Header</el-header>
+        <el-header>这里是header暂时留白</el-header>
         <el-main :style="mainStyle">
           <router-view></router-view>
         </el-main>
