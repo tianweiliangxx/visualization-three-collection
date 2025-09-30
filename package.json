@@ -32,7 +32,7 @@
   "devDependencies": {
     "@tsconfig/node22": "^22.0.2",
     "@types/cesium-china__cesium-map": "^1.0.0",
-    "@types/d3-geo": "^3.1.0",
+    "@types/d3-geo": "^3.1.0",v
     "@types/node": "^22.16.5",
     "@types/three": "^0.180.0",
     "@vitejs/plugin-vue": "^6.0.1",
