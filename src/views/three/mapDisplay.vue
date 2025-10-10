@@ -112,12 +112,14 @@ const onMouseMove = (e: any) => {
     }
     const { clientX, clientY } = e
     if (new THREE.Vector2()) {
-      mouse.x = (clientX / window.innerWidth) * 2 - 1
-      mouse.y = -(clientY / window.innerHeight) * 2 + 1
+      // 200： sideWidth 60：headerHeight
+      mouse.x = ((clientX - 200) / (window.innerWidth - 200)) * 2 - 1
     }
+    mouse.y = -((clientY - 60) / (window.innerHeight - 60)) * 2 + 1
+    console.log(mouse)
 
-    tooltipRef.value.style.left = `${clientX + 4}px`
-    tooltipRef.value.style.top = `${clientY + 4}px`
+    tooltipRef.value.style.left = `${clientX - 200 + 4}px`
+    tooltipRef.value.style.top = `${clientY - 60 + 4}px`
   }
 }
 
@@ -260,8 +262,8 @@ function initializeHandle(
 
 <style lang="scss" scoped>
 .mapBox {
-  width: 100vw;
-  height: 100vh;
+  width: calc(100vw - 200px);
+  height: calc(100vh - 60px);
   overflow: hidden;
   position: relative;
   background-color: #000808;
