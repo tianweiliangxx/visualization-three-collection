@@ -16,6 +16,8 @@ import {
   type TencentImageryProviderOptions,
 } from '@cesium-china/cesium-map'
 
+import FireEffect from '@/utils/cesium/effect/FireEffect.js'
+import SmokeEffect from '@/utils/cesium/effect/SmokeEffect.js'
 // 地图容器dom
 const mapContainer = ref<HTMLElement | null>(null)
 
@@ -226,6 +228,20 @@ function loadEffect(viewer: Cesium.Viewer) {
     lon: '121.55649',
     lat: '25.034101',
     radius: 80,
+  })
+  // 火效果
+  new FireEffect(viewer, {
+    lng: 121.55001,
+    lat: 25.039343,
+  })
+  new FireEffect(viewer, {
+    lng: 121.551034,
+    lat: 25.036803,
+  })
+  // 烟效果
+  new SmokeEffect(viewer, {
+    lng: 121.551034,
+    lat: 25.036803,
   })
 }
 </script>
