@@ -1,6 +1,6 @@
 <template>
   <div class="smartCity">
-    <div class="map" ref="mapContainer"></div>
+    <div class="map" ref="mapContainer" id="mapContainer"></div>
   </div>
 </template>
 
@@ -18,6 +18,7 @@ import {
 
 import FireEffect from '@/utils/cesium/effect/FireEffect.js'
 import SmokeEffect from '@/utils/cesium/effect/SmokeEffect.js'
+import Popup from '@/utils/cesium/Popup'
 // 地图容器dom
 const mapContainer = ref<HTMLElement | null>(null)
 
@@ -32,6 +33,10 @@ onMounted(async () => {
     load3dtiles(viewer)
 
     loadEffect(viewer)
+
+    loadAirplane(viewer)
+
+    loadMsg(viewer)
   })
 })
 
@@ -244,14 +249,266 @@ function loadEffect(viewer: Cesium.Viewer) {
     lat: 25.036803,
   })
 }
+
+// 加载飞机
+function loadAirplane(viewer: Cesium.Viewer) {
+  let start = new Cesium.JulianDate.fromDate(new Date())
+
+  // 开始时间  cesium用的JulianDate:代表天文朱利安时间,用的是世界协调时,比北京时间晚8个小时, 加上东8时，就是当前的真正时间
+  start = Cesium.JulianDate.addHours(start, 1, new Cesium.JulianDate())
+  const center = Cesium.JulianDate.addSeconds(start, 90, new Cesium.JulianDate())
+  const center2 = Cesium.JulianDate.addSeconds(start, 180, new Cesium.JulianDate())
+  const center3 = Cesium.JulianDate.addSeconds(start, 270, new Cesium.JulianDate())
+  const stop = Cesium.JulianDate.addSeconds(start, 360, new Cesium.JulianDate())
+
+  // 设置时钟范围
+  viewer.clock.startTime = start.clone()
+  viewer.clock.stopTime = stop.clone()
+  viewer.clock.currentTime = start.clone()
+
+  // 循环结束时后续动作
+  viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP
+
+  // 时间速率控制速度，时间调快多少倍，比如原来用时360秒，调整10倍后，现在用时36秒
+  viewer.clock.multiplier = 10
+  //给下方时间线设置边界
+  viewer.timeline.zoomTo(start, stop)
+
+  const position = new Cesium.SampledPositionProperty()
+  const position_cone = new Cesium.SampledPositionProperty()
+
+  const startPos = Cesium.Cartesian3.fromDegrees(121.54502359550423, 25.04103506115554, 300)
+  const centerPos = Cesium.Cartesian3.fromDegrees(121.55653842563282, 25.040757514098885, 300)
+  const centerPos2 = Cesium.Cartesian3.fromDegrees(121.55626812445513, 25.033279833487114, 300)
+  const centerPos3 = Cesium.Cartesian3.fromDegrees(121.54412259158227, 25.0335247429108, 300)
+  const endPos = Cesium.Cartesian3.fromDegrees(121.54502359550423, 25.04103506115554, 300)
+
+  const startPos_cone = Cesium.Cartesian3.fromDegrees(121.54502359550423, 25.04103506115554, 210)
+  const centerPos_cone = Cesium.Cartesian3.fromDegrees(121.55653842563282, 25.040757514098885, 210)
+  const centerPos2_cone = Cesium.Cartesian3.fromDegrees(121.55626812445513, 25.033279833487114, 210)
+  const centerPos3_cone = Cesium.Cartesian3.fromDegrees(121.54412259158227, 25.0335247429108, 210)
+  const endPos_cone = Cesium.Cartesian3.fromDegrees(121.54502359550423, 25.04103506115554, 210)
+
+  position.addSample(start, startPos)
+  position.addSample(center, centerPos)
+  position.addSample(center2, centerPos2)
+  position.addSample(center3, centerPos3)
+  position.addSample(stop, endPos)
+
+  position_cone.addSample(start, startPos_cone)
+  position_cone.addSample(center, centerPos_cone)
+  position_cone.addSample(center2, centerPos2_cone)
+  position_cone.addSample(center3, centerPos3_cone)
+  position_cone.addSample(stop, endPos_cone)
+
+  console.log(Cesium.SceneTransforms)
+
+  // 飞机模型
+  viewer.entities.add({
+    // 将实体availability设置为与模拟时间相同的时间间隔。
+    availability: new Cesium.TimeIntervalCollection([
+      new Cesium.TimeInterval({
+        start: start,
+        stop: stop,
+      }),
+    ]),
+    position: position, // 计算实体位置属性
+    orientation: new Cesium.VelocityOrientationProperty(position),
+    model: {
+      uri: '/data/missile/scene.gltf',
+      scale: 10,
+      minimumPixelSize: 32,
+    },
+
+    // 路径
+    path: {
+      show: false,
+      resolution: 1,
+      material: new Cesium.PolylineGlowMaterialProperty({
+        glowPower: 0.3,
+        color: Cesium.Color.BLUE,
+      }),
+      width: 5,
+    },
+  })
+  // 模拟飞机扫描区域
+  viewer.entities.add({
+    // 将实体availability设置为与模拟时间相同的时间间隔。
+    availability: new Cesium.TimeIntervalCollection([
+      new Cesium.TimeInterval({
+        start: start,
+        stop: stop,
+      }),
+    ]),
+    position: position_cone, // 计算实体位置属性
+    orientation: new Cesium.VelocityOrientationProperty(position),
+    // model: {
+    //   uri: 'missile/scene.gltf',
+    //   scale: 10,
+    //   minimumPixelSize: 32
+    // },
+    cylinder: {
+      material: Cesium.Color.fromCssColorString('rgba(255,240,0, 0.35)'),
+      length: 200, //圆柱体的长度
+      topRadius: 0, //顶部半径
+      bottomRadius: 70,
+    },
+    // 路径
+    path: {
+      show: false,
+      resolution: 1,
+      material: new Cesium.PolylineGlowMaterialProperty({
+        glowPower: 0.3,
+        color: Cesium.Color.BLUE,
+      }),
+      width: 5,
+    },
+  })
+}
+
+// 加载弹窗信息
+function loadMsg(viewer: Cesium.Viewer) {
+  console.log(viewer)
+  const popup = new Popup({
+    viewer: viewer,
+    className: 'bx-popup-ctn2',
+  })
+
+  console.log(popup)
+  popup.add({
+    geometry: Cesium.Cartesian3.fromDegrees(121.551034, 25.036803, 30),
+    content: {
+      header: '事件提醒',
+      content: `
+              <div><span>事件名称：</span><span>沃尔玛发生火灾</span></div>
+              <div><span>监控编号：</span><span>${parseInt(String(Math.random() * 100))}</span></div>
+              <div><span>发生时间：</span><span>2024-08-03 12:00:33</span></div>
+              <div><span>火灾等级：</span><span>一般</span></div>
+                  `,
+    },
+    isclose: true,
+  })
+
+  popup.add({
+    // lon: "121.554532",
+    // lat: "25.042364",
+    geometry: Cesium.Cartesian3.fromDegrees(121.554532, 25.042364, 30),
+    content: {
+      header: '事件提醒',
+      content: `
+              <div><span>事件名称：</span><span>仁和路发生打架斗殴</span></div>
+              <div><span>监控编号：</span><span>${parseInt(String(Math.random() * 100))}</span></div>
+              <div><span>发生时间：</span><span>2024-08-03 14:00:33</span></div>
+              <div><span>案件等级：</span><span>紧急！</span></div>
+                  `,
+    },
+    isclose: true,
+  })
+}
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .smartCity {
   width: 100%;
   height: 100%;
   .map {
     width: 100%;
     height: 100%;
+  }
+
+  .bx-popup-ctn2 {
+    position: absolute;
+    z-index: 999;
+    color: #fff;
+    /* margin: -80px 0 0; */
+    margin: 0 0 0 0;
+    transform: translate(-50%, -100%);
+  }
+
+  .bx-popup-ctn2 .divpoint-wrap {
+    padding: 0;
+    width: max-content;
+  }
+
+  .bx-popup-ctn2 .divpoint-center {
+    background: linear-gradient(
+      45deg,
+      #4f869d,
+      rgba(18, 93, 120, 0.65),
+      40%,
+      rgba(30, 127, 162, 0.65)
+    );
+    border: 1px solid #40aee2;
+    border-radius: 5px;
+    box-shadow: 0 0 10px 2px #29baf1;
+  }
+
+  .bx-popup-ctn2 .bx-popup-tip {
+    width: 17px;
+    background: #fff;
+    height: 17px;
+    padding: 1px;
+    margin: -10px auto 0;
+    -webkit-transform: rotate(45deg);
+    -moz-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+
+  .bx-popup-ctn2 .bx-popup-header-ctn {
+    background: rgba(0, 173, 255, 0.49);
+    color: #fff;
+    font-size: 15px;
+    padding: 4px;
+  }
+
+  .bx-popup-ctn2 .bx-popup-close {
+    position: absolute;
+    top: 4px;
+    right: 2px;
+    width: 26px;
+    height: 26px;
+    cursor: pointer;
+  }
+
+  .bx-popup-ctn2 .bx-popup-content-ctn {
+    padding: 10px;
+  }
+
+  .bx-popup-ctn2 .directional {
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    height: 40px;
+    background-color: #28bbf0;
+    transform: none;
+    margin: 0 0 0px 50%;
+  }
+
+  .bx-popup-ctn2 .divpoint-border {
+    transition: 0.3s ease-in;
+    background:
+      linear-gradient(0, #8cdee5 2px, #8cdee5 0) no-repeat,
+      linear-gradient(-90deg, #8cdee5 2px, #8cdee5 0) no-repeat,
+      linear-gradient(-180deg, #8cdee5 2px, #8cdee5 0) no-repeat,
+      linear-gradient(-270deg, #8cdee5 2px, #8cdee5 0) no-repeat;
+    background-size:
+      0 2px,
+      2px 0,
+      0 2px,
+      2px 0;
+    background-position:
+      0 0,
+      100% 0,
+      100% 100%,
+      0 100%;
+  }
+
+  .bx-popup-ctn2 .divpoint-border:hover {
+    background-size:
+      100% 2px,
+      2px 100%,
+      100% 2px,
+      2px 100%;
   }
 }
 </style>
