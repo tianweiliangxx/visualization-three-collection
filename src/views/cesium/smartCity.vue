@@ -33,10 +33,15 @@ onMounted(async () => {
     load3dtiles(viewer)
 
     loadEffect(viewer)
+    setTimeout(() => {
+      loadAirplane(viewer)
 
-    loadAirplane(viewer)
+      loadMsg(viewer)
 
-    loadMsg(viewer)
+      loadFireFightingTruck(viewer)
+
+      loadExcavator(viewer)
+    }, 2000)
   })
 })
 
@@ -403,6 +408,120 @@ function loadMsg(viewer: Cesium.Viewer) {
                   `,
     },
     isclose: true,
+  })
+}
+
+// 加载消防车
+function loadFireFightingTruck(viewer: Cesium.Viewer) {
+  let start = new Cesium.JulianDate.fromDate(new Date())
+
+  start = Cesium.JulianDate.addHours(start, 1, new Cesium.JulianDate())
+  const center = Cesium.JulianDate.addSeconds(start, 90, new Cesium.JulianDate())
+  const center2 = Cesium.JulianDate.addSeconds(start, 180, new Cesium.JulianDate())
+  const center3 = Cesium.JulianDate.addSeconds(start, 270, new Cesium.JulianDate())
+  const stop = Cesium.JulianDate.addSeconds(start, 360, new Cesium.JulianDate())
+
+  // 设置时钟范围
+  viewer.clock.startTime = start.clone()
+  viewer.clock.stopTime = stop.clone()
+  viewer.clock.currentTime = start.clone()
+
+  // 循环结束时后续动作
+  viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP
+
+  // 时间速率控制速度，时间调快多少倍，比如原来用时360秒，调整10倍后，现在用时36秒
+  viewer.clock.multiplier = 20
+  //给下方时间线设置边界
+  viewer.timeline.zoomTo(start, stop)
+
+  const position = new Cesium.SampledPositionProperty()
+
+  const startPos = Cesium.Cartesian3.fromDegrees(121.54883989579417, 25.04435068135976, 1)
+  const centerPos = Cesium.Cartesian3.fromDegrees(121.54891310254465, 25.041764022763047, 1)
+  const centerPos2 = Cesium.Cartesian3.fromDegrees(121.54886429804492, 25.039707921882993, 1)
+  const centerPos3 = Cesium.Cartesian3.fromDegrees(121.54886429804492, 25.037696004860265, 1)
+  const endPos = Cesium.Cartesian3.fromDegrees(121.55147533881802, 25.03767389569815, 1)
+
+  position.addSample(start, startPos)
+  position.addSample(center, centerPos)
+  position.addSample(center2, centerPos2)
+  position.addSample(center3, centerPos3)
+  position.addSample(stop, endPos)
+
+  const entity = viewer.entities.add({
+    availability: new Cesium.TimeIntervalCollection([
+      new Cesium.TimeInterval({
+        start: start,
+        stop: stop,
+      }),
+    ]),
+    position: position, // 计算实体位置属性
+    orientation: new Cesium.VelocityOrientationProperty(position),
+    model: {
+      uri: '/data/xiaofangche.gltf',
+      scale: 10,
+      minimumPixelSize: 32,
+    },
+
+    path: {
+      show: false,
+    },
+  })
+}
+
+// 加载挖掘机
+function loadExcavator(viewer: Cesium.Viewer) {
+  let start = new Cesium.JulianDate.fromDate(new Date())
+
+  start = Cesium.JulianDate.addHours(start, 1, new Cesium.JulianDate())
+  const center = Cesium.JulianDate.addSeconds(start, 120, new Cesium.JulianDate())
+  const center2 = Cesium.JulianDate.addSeconds(start, 240, new Cesium.JulianDate())
+  const stop = Cesium.JulianDate.addSeconds(start, 360, new Cesium.JulianDate())
+
+  // 设置时钟范围
+  viewer.clock.startTime = start.clone()
+  viewer.clock.stopTime = stop.clone()
+  viewer.clock.currentTime = start.clone()
+
+  // 循环结束时后续动作
+  viewer.clock.clockRange = Cesium.ClockRange.LOOP_STOP
+
+  // 时间速率控制速度，时间调快多少倍，比如原来用时360秒，调整10倍后，现在用时36秒
+  viewer.clock.multiplier = 20
+  //给下方时间线设置边界
+  viewer.timeline.zoomTo(start, stop)
+
+  const position = new Cesium.SampledPositionProperty()
+
+  const startPos = Cesium.Cartesian3.fromDegrees(121.54884167619042, 25.033273079716622, 1)
+  const centerPos = Cesium.Cartesian3.fromDegrees(121.54859722416842, 25.037776601420433, 1)
+  const centerPos2 = Cesium.Cartesian3.fromDegrees(121.55544188079375, 25.037721231255958, 1)
+
+  const endPos = Cesium.Cartesian3.fromDegrees(121.55391405565354, 25.043590329597393, 1)
+
+  position.addSample(start, startPos)
+  position.addSample(center, centerPos)
+  position.addSample(center2, centerPos2)
+  position.addSample(stop, endPos)
+
+  const entity = viewer.entities.add({
+    availability: new Cesium.TimeIntervalCollection([
+      new Cesium.TimeInterval({
+        start: start,
+        stop: stop,
+      }),
+    ]),
+    position: position, // 计算实体位置属性
+    orientation: new Cesium.VelocityOrientationProperty(position),
+    model: {
+      uri: '/data/wajueji.glb',
+      scale: 10,
+      minimumPixelSize: 32,
+    },
+
+    path: {
+      show: false,
+    },
   })
 }
 </script>
