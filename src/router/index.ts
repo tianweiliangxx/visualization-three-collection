@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/home/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -12,7 +12,7 @@ const router = createRouter({
         {
           path: 'home',
           name: 'home',
-          component: () => import('@/views/HomeView.vue'),
+          component: () => import('@/views/home/HomeView.vue'),
         },
         {
           path: 'drillDownMap',

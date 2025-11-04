@@ -1,10 +1,14 @@
 <template>
   <div class="common-layout">
     <el-container>
-      <el-aside :width="config.sideWidth">
+      <el-aside :width="config.sideWidth" class="aside">
         <el-scrollbar>
           <el-menu :default-openeds="['1', '3']" @select="handleSelect">
-            <el-sub-menu index="1">
+            <el-menu-item index="0" @click="handleClick('/')">
+              <el-icon><icon-menu /></el-icon>
+              <span>首页</span>
+            </el-menu-item>
+            <el-sub-menu index="10">
               <template #title>
                 <el-icon><icon-menu /></el-icon>echarts
               </template>
@@ -12,7 +16,7 @@
                 >地图下钻效果</el-menu-item
               >
             </el-sub-menu>
-            <el-sub-menu index="2">
+            <el-sub-menu index="20">
               <template #title>
                 <el-icon><icon-menu /></el-icon>Threejs
               </template>
@@ -20,7 +24,7 @@
                 >地图展示</el-menu-item
               >
             </el-sub-menu>
-            <el-sub-menu index="3">
+            <el-sub-menu index="30">
               <template #title>
                 <el-icon><icon-menu /></el-icon>Cesium
               </template>
@@ -68,6 +72,14 @@ const handleClick = (path) => {
 <style lang="scss" scoped>
 .el-menu {
   border-right: none;
+}
+
+.el-aside {
+  border-right: 1px solid #e4e7ed;
+}
+
+.el-header {
+  border-bottom: 1px solid #e4e7ed;
 }
 
 .el-main {
