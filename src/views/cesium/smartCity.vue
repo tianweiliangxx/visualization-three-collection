@@ -8,8 +8,11 @@
 import { onMounted, ref } from 'vue'
 
 import CircleScanSystem from '@/utils/cesium/CircleScanSystem.ts'
-
 import * as Cesium from 'cesium'
+import {
+  DynamicWallMaterialProperty,
+  map_common_addDatasouce,
+} from '@/utils/cesium/RegisterCustomComponents/DynamicWallMaterialProperty'
 import 'cesium/Build/Cesium/Widgets/widgets.css'
 import {
   TencentImageryProvider,
@@ -239,6 +242,154 @@ function loadEffect(viewer: Cesium.Viewer) {
     lat: '25.034101',
     radius: 80,
   })
+
+  // 发光的线
+  const source = `czm_material czm_getMaterial(czm_materialInput materialInput)
+            {
+                czm_material material = czm_getDefaultMaterial(materialInput);
+                vec2 st = materialInput.st;
+                vec4 colorImage = texture(image, vec2(fract((st.s - speed * czm_frameNumber * 0.001)), st.t));
+                material.alpha = colorImage.a * color.a;
+                material.diffuse = color.rgb;
+                return material;
+        }`
+
+  const material = new Cesium.Material({
+    fabric: {
+      uniforms: {
+        color: Cesium.Color.fromCssColorString('#7ffeff'),
+        image: '/images/cesium/line1.png',
+        speed: 10,
+      },
+      source: source,
+    },
+    translucent: function () {
+      return true
+    },
+  })
+  const appearance = new Cesium.PolylineMaterialAppearance()
+  appearance.material = material
+
+  viewer.scene.primitives.add(
+    new Cesium.Primitive({
+      geometryInstances: new Cesium.GeometryInstance({
+        geometry: new Cesium.PolylineGeometry({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            121.54383710651683, 25.04158767318846, 121.54886660576454, 25.041520778338935,
+            121.5489302661648, 25.037809764195416, 121.55763292042423, 25.037610190383617,
+          ]),
+          width: 5.0,
+        }),
+      }),
+      appearance: appearance,
+    }),
+  )
+
+  viewer.scene.primitives.add(
+    new Cesium.Primitive({
+      geometryInstances: new Cesium.GeometryInstance({
+        geometry: new Cesium.PolylineGeometry({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            121.55375466873483, 25.044150811019648, 121.55544465416511, 25.037715002796432,
+            121.54867305622793, 25.037870016863494, 121.54871015658512, 25.033391988086763,
+          ]),
+          width: 5.0,
+        }),
+      }),
+      appearance: appearance,
+    }),
+  )
+
+  viewer.scene.primitives.add(
+    new Cesium.Primitive({
+      geometryInstances: new Cesium.GeometryInstance({
+        geometry: new Cesium.PolylineGeometry({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            121.54896133676533, 25.044688605691732, 121.54907493228905, 25.041491821748266,
+            121.55760945852529, 25.041291233041818, 121.55747389009491, 25.033084480003765,
+            121.543669229817, 25.033348047963145, 121.54380690184257, 25.038091540100325,
+            121.54874670371714, 25.03798076751336, 121.54905974002901, 25.044688605691732,
+            121.54652610721564, 25.04506985487869, 121.54386854531765, 25.044935266844632,
+            121.54368432924542, 25.03824665858879, 121.5575974570097, 25.037847869365393,
+            121.55782052058595, 25.04495769594847, 121.55375546574658, 25.044262809177837,
+            121.54905987101426, 25.044733445131712,
+          ]),
+          width: 5.0,
+        }),
+      }),
+      appearance: appearance,
+    }),
+  )
+
+  viewer.scene.primitives.add(
+    new Cesium.Primitive({
+      geometryInstances: new Cesium.GeometryInstance({
+        geometry: new Cesium.PolylineGeometry({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            121.55247102172734, 25.033294114977295, 121.5525021244456, 25.036184694941213,
+            121.5511111493363, 25.037979511647478, 121.54379246879625, 25.038023901030698,
+            121.54384621066026, 25.041653508137443, 121.5461551006216, 25.041497151878872,
+            121.54599566446967, 25.0379573182758, 121.55297123215576, 25.03793512578399,
+            121.55298088865737, 25.04145248665732, 121.55296365188275, 25.044138703413196,
+          ]),
+          width: 5.0,
+        }),
+      }),
+      appearance: appearance,
+    }),
+  )
+
+  viewer.scene.primitives.add(
+    new Cesium.Primitive({
+      geometryInstances: new Cesium.GeometryInstance({
+        geometry: new Cesium.PolylineGeometry({
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            121.54375455026866, 25.036029857442244, 121.54610032336575, 25.035985626035824,
+            121.54598728823271, 25.03340416800252, 121.54881491346185, 25.033382155659254,
+            121.54878833220863, 25.035565602229056, 121.55252458735305, 25.035344663858893,
+            121.55250253652764, 25.036361704627197, 121.55299202722222, 25.036605184507167,
+            121.55292156212147, 25.037668884495375, 121.55566169439066, 25.0375801655385,
+            121.55560211090364, 25.035499311540576, 121.55739387018264, 25.033206088198455,
+          ]),
+          width: 5.0,
+        }),
+      }),
+      appearance: appearance,
+    }),
+  )
+
+  const data = [
+    [121.5435972916668, 25.03335124407222],
+    [121.55758689992729, 25.03305850196061],
+    [121.5578765706079, 25.045082938309875],
+    [121.55308216929683, 25.044389044803737],
+    [121.54911574643842, 25.04483902108565],
+    [121.54648299411446, 25.045158015241427],
+    [121.54397513270857, 25.04493282041925],
+    [121.54359717389292, 25.033369546587437],
+  ]
+  let coor = Array.prototype.concat.apply([], data)
+  let datasouce = map_common_addDatasouce(viewer, 'wall')
+
+  try {
+    datasouce.entities.add({
+      wall: {
+        positions: Cesium.Cartesian3.fromDegreesArray(coor),
+        maximumHeights: new Array(data.length).fill(50),
+        minimunHeights: new Array(data.length).fill(0),
+
+        // 动态
+        material: new DynamicWallMaterialProperty({
+          trailImage: '/images/cesium/wall.png',
+          color: Cesium.Color.CYAN,
+          duration: 1500,
+        }),
+      },
+    })
+  } catch (e) {
+    console.log(e)
+  }
+
   // 火效果
   new FireEffect(viewer, {
     lng: 121.55001,
